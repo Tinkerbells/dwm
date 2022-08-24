@@ -1,4 +1,4 @@
-# Dwm (Dynamic window manager for X)
+# Dwm (dynamic window manager for X)
 
 ## Features
 - Xresources support (add your theme to xresources file, look at my [example](https://github.com/Tinkerbells/dotfiles/blob/main/X11/.config/X11/xresources))
