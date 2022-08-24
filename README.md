@@ -5,7 +5,7 @@
 
 ## Patches 
 - [dwm-alwayscenter](https://dwm.suckless.org/patches/alwayscenter/)
-- [dwn-fixborders](https://dwm.suckless.org/patches/alpha/) - fix transparent border udner picom  
+- [dwn-fixborders](https://dwm.suckless.org/patches/alpha/) - fix transparent border under picom  
 - [dwm-movestack](https://dwm.suckless.org/patches/movestack/)
 - [dwm-attachaside](https://dwm.suckless.org/patches/attachaside/)
 - [dwm-pertag](https://dwm.suckless.org/patches/pertag/)
