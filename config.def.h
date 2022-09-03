@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const int gappx              = 5;              /* gaps between windows */
+static const int gappx        = 5;              /* gaps between windows */
 static unsigned int borderpx  = 1;        /* border pixel of windows */
 static unsigned int snap      = 32;       /* snap pixel */
 static int showbar            = 1;        /* 0 means no bar */
@@ -21,20 +21,21 @@ static char *colors[][3] = {
  };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4" };
+static const char *tags[] = { "1", "2", "3", "4", "5" };
 
 static const Rule rules[] = {
-   /* class              instance       title           tags mask    switch tag     isfloating    monitor */
-  { "Chromium",          NULL,           NULL,          1 << 0,       1,             0,           -1 },
-  { "qBittorrent",       NULL,           NULL,          1 << 3,       4,             0,           -1 },
-  { "TelegramDesktop",   NULL,           NULL,          1 << 2,       3,             0,           -1 },
-  { "mpv",               NULL,           NULL,          1 << 2,       3,             0,           -1 },
-  { NULL,                NULL,          "terminal",     1 << 1,       2,             0,           -1 },
-  { NULL,                NULL,          "ncmpcpp",      1 << 3,       4,             0,           -1 },
-  { NULL,                NULL,          "btop",         1 << 3,       4,             0,           -1 },
-  { NULL,                NULL,          "lf",           1 << 2,       3,             0,           -1 },
-  { NULL,                NULL,          "nvim",         1 << 1,       2,             0,           -1 },
-  { NULL,                NULL,          "view-tr",      0,            0,             1,           -1 },
+   /* class              instance       title              tags mask    switch tag     isfloating    monitor */
+  { "Chromium",          NULL,           NULL,             1 << 0,       1,             0,           -1 },
+  { "qBittorrent",       NULL,           NULL,             1 << 3,       4,             0,           -1 },
+  { "TelegramDesktop",   NULL,           NULL,             1 << 2,       3,             0,           -1 },
+  { "discord",           NULL,           NULL,             1 << 2,       3,             0,           -1 },
+  { "mpv",               NULL,           NULL,             1 << 2,       3,             0,           -1 },
+  { NULL,                NULL,          "terminal",        1 << 1,       2,             0,           -1 },
+  { NULL,                NULL,          "ncmpcpp",         1 << 4,       5,             0,           -1 },
+  { NULL,                NULL,          "btop",            1 << 3,       4,             0,           -1 },
+  { NULL,                NULL,          "lf",              1 << 3,       4,             0,           -1 },
+  { NULL,                NULL,          "nvim",            1 << 1,       2,             0,           -1 },
+  { NULL,                NULL,          "view-translated",      0,            0,             1,           -1 },
 };
 
 /* layout(s) */
@@ -143,6 +144,13 @@ static Button buttons[] = {
 	{ ClkStatusText,        0,              Button1,        sigstatusbar,   {.i = 1} },
 	{ ClkStatusText,        0,              Button2,        sigstatusbar,   {.i = 2} },
 	{ ClkStatusText,        0,              Button3,        sigstatusbar,   {.i = 3} },
+	{ ClkStatusText,        0,              Button4,        sigstatusbar,   {.i = 4} },
+	{ ClkStatusText,        0,              Button5,        sigstatusbar,   {.i = 5} },
+    { ClkStatusText,        ShiftMask,      Button1,        sigstatusbar,   {.i = 6 } },
+    { ClkStatusText,        ShiftMask,      Button2,        sigstatusbar,   {.i = 7 } },
+    { ClkStatusText,        ShiftMask,      Button3,        sigstatusbar,   {.i = 8 } },
+    { ClkStatusText,        ShiftMask,      Button4,        sigstatusbar,   {.i = 9 } },
+    { ClkStatusText,        ShiftMask,      Button5,        sigstatusbar,   {.i = 10 } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
