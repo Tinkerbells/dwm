@@ -9,11 +9,12 @@ static int topbar             = 1;        /* 0 means bottom bar */
 static char font[]            = "JetBrainsMono NF:size=10";
 static const char *fonts[]          = { font };
 static char normbgcolor[]           = "#222222";
-static char normbordercolor[]       = "#444444";
+static char normbordercolor[]       = "#444444"; 
 static char normfgcolor[]           = "#bbbbbb";
 static char selfgcolor[]            = "#eeeeee";
 static char selbordercolor[]        = "#005577";
 static char selbgcolor[]            = "#005577";
+
 static char *colors[][3] = {
        /*               fg           bg           border   */
        [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
@@ -25,7 +26,9 @@ static const char *tags[] = { "1", "2", "3", "4", "5" };
 
 static const Rule rules[] = {
    /* class              instance       title              tags mask    switch tag     isfloating    monitor */
+  { "firefox",           NULL,           NULL,             1 << 0,       1,             0,           -1 },
   { "Chromium",          NULL,           NULL,             1 << 0,       1,             0,           -1 },
+  { "qutebrowser",       NULL,           NULL,             1 << 0,       1,             0,           -1 },
   { "qBittorrent",       NULL,           NULL,             1 << 3,       4,             0,           -1 },
   { "TelegramDesktop",   NULL,           NULL,             1 << 2,       3,             0,           -1 },
   { "discord",           NULL,           NULL,             1 << 2,       3,             0,           -1 },
@@ -35,7 +38,8 @@ static const Rule rules[] = {
   { NULL,                NULL,          "btop",            1 << 3,       4,             0,           -1 },
   { NULL,                NULL,          "lf",              1 << 3,       4,             0,           -1 },
   { NULL,                NULL,          "nvim",            1 << 1,       2,             0,           -1 },
-  { NULL,                NULL,          "view-translated",      0,            0,             1,           -1 },
+  { NULL,                NULL,          "add-book",             0,       0,             1,           -1 },
+  { NULL,                NULL,          "view-translated",      0,       0,             1,           -1 },
 };
 
 /* layout(s) */
