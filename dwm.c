@@ -190,6 +190,7 @@ static void expose(XEvent *e);
 static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
+static void focusmonx(const Arg *arg);
 static void focusstack(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
 static int getrootptr(int *x, int *y);
@@ -953,6 +954,18 @@ focusin(XEvent *e)
 }
 
 void
+focusmonx(const Arg *arg)
+{
+	Monitor *m;
+	for (m = mons; m && m->num != arg->i; m = m->next);
+	if (m == selmon)
+		return;
+	unfocus(selmon->sel, 0);
+	selmon = m;
+	focus(NULL);
+}
+
+void
 focusmon(const Arg *arg)
 {
 	Monitor *m;
@@ -1259,6 +1272,8 @@ manage(Window w, XWindowAttributes *wa)
 	c->mon->sel = c;
 	arrange(c->mon);
 	XMapWindow(dpy, c->win);
+	if (c && c->mon == selmon)
+		XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w/2, c->h/2);
 	focus(NULL);
 }
 
@@ -2042,6 +2057,9 @@ unmanage(Client *c, int destroyed)
 	focus(NULL);
 	updateclientlist();
 	arrange(m);
+	if (m == selmon && m->sel)
+		XWarpPointer(dpy, None, m->sel->win, 0, 0, 0, 0,
+		             m->sel->w/2, m->sel->h/2);
 	if (c->switchtotag) {
 		Arg a = { .ui = c->switchtotag };
 		view(&a);

@@ -68,10 +68,13 @@ static const Layout layouts[] = {
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
+	{ MODKEY,                       KEY,      focusmonx,      {.i = 0 } }, \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+	{ Mod1Mask,                     KEY,      focusmonx,      {.i = 1 } }, \
+	{ Mod1Mask,                     KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} }, \
 
 #define STATUSBAR "dwmblocks"
 
@@ -150,11 +153,11 @@ static Button buttons[] = {
 	{ ClkStatusText,        0,              Button3,        sigstatusbar,   {.i = 3} },
 	{ ClkStatusText,        0,              Button4,        sigstatusbar,   {.i = 4} },
 	{ ClkStatusText,        0,              Button5,        sigstatusbar,   {.i = 5} },
-    { ClkStatusText,        ShiftMask,      Button1,        sigstatusbar,   {.i = 6 } },
-    { ClkStatusText,        ShiftMask,      Button2,        sigstatusbar,   {.i = 7 } },
-    { ClkStatusText,        ShiftMask,      Button3,        sigstatusbar,   {.i = 8 } },
-    { ClkStatusText,        ShiftMask,      Button4,        sigstatusbar,   {.i = 9 } },
-    { ClkStatusText,        ShiftMask,      Button5,        sigstatusbar,   {.i = 10 } },
+  { ClkStatusText,        ShiftMask,      Button1,        sigstatusbar,   {.i = 6 } },
+  { ClkStatusText,        ShiftMask,      Button2,        sigstatusbar,   {.i = 7 } },
+  { ClkStatusText,        ShiftMask,      Button3,        sigstatusbar,   {.i = 8 } },
+  { ClkStatusText,        ShiftMask,      Button4,        sigstatusbar,   {.i = 9 } },
+  { ClkStatusText,        ShiftMask,      Button5,        sigstatusbar,   {.i = 10 } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
