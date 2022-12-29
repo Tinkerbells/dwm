@@ -958,8 +958,8 @@ focusmonx(const Arg *arg)
 {
 	Monitor *m;
 	for (m = mons; m && m->num != arg->i; m = m->next);
-	if (m == selmon)
-		return;
+  if (!m || m == selmon)
+    return;
 	unfocus(selmon->sel, 0);
 	selmon = m;
 	focus(NULL);
