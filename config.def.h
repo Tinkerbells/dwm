@@ -17,8 +17,8 @@ static char selbgcolor[]            = "#005577";
 
 static char *colors[][3] = {
        /*               fg           bg           border   */
-       [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
-       [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
+      [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
+      [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
       [SchemeTitle] = { normfgcolor,  normbgcolor,  normbordercolor},
  };
 
@@ -122,7 +122,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_Tab,    focusmon,       {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_Tab,    tagmon,           {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_Tab,    tagmon,         {.i = -1 } },
 	{ MODKEY,                       XK_minus,  setgaps,        {.i = -5 } },
 	{ MODKEY,                       XK_equal,  setgaps,        {.i = +5 } },
 	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
