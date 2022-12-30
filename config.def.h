@@ -19,6 +19,7 @@ static char *colors[][3] = {
        /*               fg           bg           border   */
        [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
        [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
+      [SchemeTitle] = { normfgcolor,  normbgcolor,  normbordercolor},
  };
 
 /* tagging */
@@ -67,11 +68,9 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod4Mask
+#define MODKEYALT Mod1Mask
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      focusmonx,      {.i = 0 } }, \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ Mod1Mask,                     KEY,      focusmonx,      {.i = 1 } }, \
-	{ Mod1Mask,                     KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} }, \
