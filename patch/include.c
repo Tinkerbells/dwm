@@ -11,7 +11,6 @@
 #include "bar_winicon.c"
 #include "bar_tags.c"
 #include "bar_wintitle.c"
-#include "bar_fancybar.c"
 
 /* Other patches */
 #include "attachx.c"
