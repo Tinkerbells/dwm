@@ -1414,6 +1414,11 @@ keypress(XEvent *e)
 void
 killclient(const Arg *arg)
 {
+  if (selmon->sel->scratchkey) {
+      char *cmd[] = {&selmon->sel->scratchkey, NULL};
+      togglescratch(&((Arg) { .v = cmd }));
+      return;
+  }
 	if (!selmon->sel)
 		return;
 	if (!sendevent(selmon->sel, wmatom[WMDelete]))
