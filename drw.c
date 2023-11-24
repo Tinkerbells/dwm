@@ -107,8 +107,7 @@ drw_free(Drw *drw)
 	free(drw);
 }
 
-/* This function is an implementation detail. Library users should use
- * drw_fontset_create instead.
+/* This function is an implementation detail. Library users should use drw_fontset_create instead.
  */
 static Fnt *
 xfont_create(Drw *drw, const char *fontname, FcPattern *fontpattern)
