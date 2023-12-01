@@ -1239,7 +1239,7 @@ focusstack(const Arg *arg)
 	if (arg->i > 0) {
 		for (c = selmon->sel->next; c && (!ISVISIBLE(c) || ISSTICKY(c)); c = c->next);
 		if (!c)
-      for (c = selmon->clients; c && !ISVISIBLE(c) && !ISSTICKY(c); c = c->next);
+      for (c = selmon->clients; c && (!ISVISIBLE(c) || ISSTICKY(c)); c = c->next);
 	} else {
 		for (i = selmon->clients; i != selmon->sel; i = i->next)
 			if (ISVISIBLE(i) && !ISSTICKY(i))
