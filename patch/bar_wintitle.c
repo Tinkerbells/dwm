@@ -30,7 +30,6 @@ draw_wintitle(Bar *bar, BarArg *a)
 	XSetForeground(drw->dpy, drw->gc, drw->scheme[ColBg].pixel);
 	XFillRectangle(drw->dpy, drw->drawable, drw->gc, x, a->y, w, a->h);
 
-
 	tx += tpad;
 	tw -= lrpad;
 

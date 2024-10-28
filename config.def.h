@@ -1,28 +1,34 @@
 /* See LICENSE file for copyright and license details. */
 
+/* Helper macros for spawning commands */
+#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+#define CMD(...)   { .v = (const char*[]){ __VA_ARGS__, NULL } }
+
 /* appearance */
-static const unsigned int borderpx       = 3;   /* border pixel of windows */
+static const unsigned int borderpx       = 1;   /* border pixel of windows */
 static const unsigned int snap           = 32;  /* snap pixel */
-static const int swallowfloating         = 1;   /* 1 means swallow floating windows by default */
-static const unsigned int gappih         = 10;  /* horiz inner gap between windows */
+static const int swallowfloating         = 0;   /* 1 means swallow floating windows by default */
+static const unsigned int gappih         = 20;  /* horiz inner gap between windows */
 static const unsigned int gappiv         = 10;  /* vert inner gap between windows */
 static const unsigned int gappoh         = 10;  /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov         = 10;  /* vert outer gap between windows and screen edge */
+static const unsigned int gappov         = 30;  /* vert outer gap between windows and screen edge */
 static const int smartgaps_fact          = 0;   /* gap factor when there is only one client; 0 = no gaps, 3 = 3x outer gaps */
 static const int showbar                 = 1;   /* 0 means no bar */
 static const int topbar                  = 1;   /* 0 means bottom bar */
-#define ICONSIZE 20    /* icon size */
+static const int bar_height              = 40;   /* 0 means derive from font, >= 1 explicit height */
+#define ICONSIZE 25    /* icon size */
 #define ICONSPACING 5  /* space between icon and title */
 /* Status is to be shown on: -1 (all monitors), 0 (a specific monitor by index), 'A' (active monitor) */
 static const int statusmon               = 'A';
-
-
+static const unsigned int systrayspacing = 2;   /* systray spacing */
+static const int showsystray             = 1;   /* 0 means no systray */
 
 /* Indicators: see patch/bar_indicators.h for options */
 static int tagindicatortype              = INDICATOR_TOP_LEFT_SQUARE;
 static int tiledindicatortype            = INDICATOR_NONE;
 static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
-static const char *fonts[]               = { "JetBrainsMono Nerd Font:size=10:style=Bold" };
+static const char *fonts[]               = { "ComicShannsMono Nerd Font:size=10:style=Bold" };
+static const char dmenufont[]            = "monospace:size=10";
 
 static char c000000[]                    = "#000000"; // placeholder value
 
@@ -66,22 +72,25 @@ static char urgbgcolor[]                 = "#222222";
 static char urgbordercolor[]             = "#ff0000";
 static char urgfloatcolor[]              = "#db8fd9";
 
-static char scratchselfgcolor[]          = "#FFF7D4";
-static char scratchselbgcolor[]          = "#77547E";
-static char scratchselbordercolor[]      = "#894B9F";
-static char scratchselfloatcolor[]       = "#894B9F";
-
-static char scratchnormfgcolor[]         = "#FFF7D4";
-static char scratchnormbgcolor[]         = "#664C67";
-static char scratchnormbordercolor[]     = "#77547E";
-static char scratchnormfloatcolor[]      = "#77547E";
-
-
+static const unsigned int baralpha = 0xd0;
+static const unsigned int borderalpha = OPAQUE;
+static const unsigned int alphas[][3] = {
+	/*                       fg      bg        border     */
+	[SchemeNorm]         = { OPAQUE, baralpha, borderalpha },
+	[SchemeSel]          = { OPAQUE, baralpha, borderalpha },
+	[SchemeTitleNorm]    = { OPAQUE, baralpha, borderalpha },
+	[SchemeTitleSel]     = { OPAQUE, baralpha, borderalpha },
+	[SchemeTagsNorm]     = { OPAQUE, baralpha, borderalpha },
+	[SchemeTagsSel]      = { OPAQUE, baralpha, borderalpha },
+	[SchemeHidNorm]      = { OPAQUE, baralpha, borderalpha },
+	[SchemeHidSel]       = { OPAQUE, baralpha, borderalpha },
+	[SchemeUrg]          = { OPAQUE, baralpha, borderalpha },
+};
 
 static char *colors[][ColCount] = {
 	/*                       fg                bg                border                float */
-	[SchemeNorm]         = { normfgcolor,      normbgcolor,      normbordercolor,      normbordercolor },
-	[SchemeSel]          = { selfgcolor,       selbgcolor,       selbordercolor,       selbordercolor },
+	[SchemeNorm]         = { normfgcolor,      normbgcolor,      normbordercolor,      normfloatcolor },
+	[SchemeSel]          = { selfgcolor,       selbgcolor,       selbordercolor,       selfloatcolor },
 	[SchemeTitleNorm]    = { titlenormfgcolor, titlenormbgcolor, titlenormbordercolor, titlenormfloatcolor },
 	[SchemeTitleSel]     = { titleselfgcolor,  titleselbgcolor,  titleselbordercolor,  titleselfloatcolor },
 	[SchemeTagsNorm]     = { tagsnormfgcolor,  tagsnormbgcolor,  tagsnormbordercolor,  tagsnormfloatcolor },
@@ -89,20 +98,41 @@ static char *colors[][ColCount] = {
 	[SchemeHidNorm]      = { hidnormfgcolor,   hidnormbgcolor,   c000000,              c000000 },
 	[SchemeHidSel]       = { hidselfgcolor,    hidselbgcolor,    c000000,              c000000 },
 	[SchemeUrg]          = { urgfgcolor,       urgbgcolor,       urgbordercolor,       urgfloatcolor },
-	[SchemeScratchSel]  = { scratchselfgcolor, scratchselbgcolor, scratchselbordercolor, scratchselfloatcolor },
-	[SchemeScratchNorm] = { scratchnormfgcolor, scratchnormbgcolor, scratchnormbordercolor, scratchnormfloatcolor },
 };
 
-
-
-/* Tags */
+/* Tags
+ * In a traditional dwm the number of tags in use can be changed simply by changing the number
+ * of strings in the tags array. This build does things a bit different which has some added
+ * benefits. If you need to change the number of tags here then change the NUMTAGS macro in dwm.c.
+ *
+ * Examples:
+ *
+ *  1) static char *tagicons[][NUMTAGS*2] = {
+ *         [DEFAULT_TAGS] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I" },
+ *     }
+ *
+ *  2) static char *tagicons[][1] = {
+ *         [DEFAULT_TAGS] = { "•" },
+ *     }
+ *
+ * The first example would result in the tags on the first monitor to be 1 through 9, while the
+ * tags for the second monitor would be named A through I. A third monitor would start again at
+ * 1 through 9 while the tags on a fourth monitor would also be named A through I. Note the tags
+ * count of NUMTAGS*2 in the array initialiser which defines how many tag text / icon exists in
+ * the array. This can be changed to *3 to add separate icons for a third monitor.
+ *
+ * For the second example each tag would be represented as a bullet point. Both cases work the
+ * same from a technical standpoint - the icon index is derived from the tag index and the monitor
+ * index. If the icon index is is greater than the number of tag icons then it will wrap around
+ * until it an icon matches. Similarly if there are two tag icons then it would alternate between
+ * them. This works seamlessly with alternative tags and alttagsdecoration patches.
+ */
 static char *tagicons[][NUMTAGS] =
 {
-	[DEFAULT_TAGS]        = { "1", "2", "3", "4" },
+	[DEFAULT_TAGS]        = { "1", "2", "3", "4", "5", "6", "7", "8", "9" },
 	[ALTERNATIVE_TAGS]    = { NULL },
 	[ALT_TAGS_DECORATION] = { NULL },
 };
-
 
 /* There are two options when it comes to per-client rules:
  *  - a typical struct table or
@@ -133,15 +163,7 @@ static const Rule rules[] = {
 	RULE(.wintype = WTYPE "UTILITY", .isfloating = 1)
 	RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
 	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
-	RULE(.class = "Gimp", .tags = 1 << 4)
-	RULE(.class = "St" TERMINAL)
-	RULE(.class = "TelegramDesktop", .instance = "Telegram", .scratchkey = 't', .isfloating = 0)
-	RULE(.title = "lf", .scratchkey = 'f', .isfloating = 0)
-	RULE(.title = "ncmpcpp", .scratchkey = 'm', .isfloating = 1)
 };
-
-
-
 
 /* Bar rules allow you to configure what is shown where on the bar, as well as
  * introducing your own bar modules.
@@ -158,7 +180,7 @@ static const Rule rules[] = {
 static const BarRule barrules[] = {
 	/* monitor   bar    alignment         widthfunc                 drawfunc                clickfunc                hoverfunc                name */
 	{ -1,        0,     BAR_ALIGN_LEFT,   width_tags,               draw_tags,              click_tags,              hover_tags,              "tags" },
-	{ -1,        0,     BAR_ALIGN_LEFT,   width_ltsymbol,           draw_ltsymbol,          click_ltsymbol,          NULL,                    "layout" },
+	{  0,        0,     BAR_ALIGN_RIGHT,  width_systray,            draw_systray,           click_systray,           NULL,                    "systray" },
 	{ statusmon, 0,     BAR_ALIGN_RIGHT,  width_status2d,           draw_status2d,          click_statuscmd,         NULL,                    "status2d" },
 	{ -1,        0,     BAR_ALIGN_NONE,   width_wintitle,           draw_wintitle,          click_wintitle,          NULL,                    "wintitle" },
 };
@@ -169,15 +191,12 @@ static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
-
-
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
 };
-
 
 /* key definitions */
 #define MODKEY Mod4Mask
@@ -187,19 +206,8 @@ static const Layout layouts[] = {
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
-
-
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-
-/* commands */
-static const char *telegramcmd[] = {"t", "Telegram", NULL};
-static const char *lfcmd[] = {"f", "st", "-t", "lf", "-e", "lfub", NULL};
-static const char *ncmpcppcmd[] = {"m", "st", "-t", "ncmpcpp", "-e", "ncmpcpp", NULL};
-
 /* This defines the name of the executable that handles the bar (used for signalling purposes) */
 #define STATUSBAR "dwmblocks"
-
 
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
@@ -223,18 +231,13 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_m,          setlayout,              {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,      setlayout,              {0} },
 	{ MODKEY|ShiftMask,             XK_space,      togglefloating,         {0} },
-	{ MODKEY|ShiftMask,             XK_t,          togglescratch,          {.v = telegramcmd } },
-	{ MODKEY,                       XK_f,          togglescratch,          {.v = lfcmd } },
-	{ MODKEY|ControlMask,           XK_m,          togglescratch,          {.v = ncmpcppcmd } },
 	{ MODKEY,                       XK_v,          togglesticky,           {0} },
-	{ MODKEY,                       XK_0,          view,                   {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,          tag,                    {.ui = ~0 } },
+  { MODKEY,                       XK_0,          view,                   {.ui = ~0 } },
+  { MODKEY|ShiftMask,             XK_0,          tag,                    {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,      focusmon,               {.i = -1 } },
 	{ MODKEY,                       XK_period,     focusmon,               {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,      tagmon,                 {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period,     tagmon,                 {.i = +1 } },
-	{ MODKEY|Mod4Mask|ControlMask,  XK_comma,      tagswapmon,             {.i = +1 } },
-	{ MODKEY|Mod4Mask|ControlMask,  XK_period,     tagswapmon,             {.i = -1 } },
 	TAGKEYS(                        XK_1,                                  0)
 	TAGKEYS(                        XK_2,                                  1)
 	TAGKEYS(                        XK_3,                                  2)
@@ -245,7 +248,6 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                                  7)
 	TAGKEYS(                        XK_9,                                  8)
 };
-
 
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
@@ -263,7 +265,6 @@ static const Button buttons[] = {
   { ClkStatusText,        ShiftMask,           Button2,        sigstatusbar,   {.i = 7 } },
   { ClkStatusText,        ShiftMask,           Button3,        sigstatusbar,   {.i = 8 } },
   { ClkStatusText,        ShiftMask,           Button4,        sigstatusbar,   {.i = 9 } },
-  { ClkStatusText,        ShiftMask,           Button5,        sigstatusbar,   {.i = 10 } },
 	/* placemouse options, choose which feels more natural:
 	 *    0 - tiled position is relative to mouse cursor
 	 *    1 - tiled postiion is relative to window center
@@ -282,5 +283,4 @@ static const Button buttons[] = {
 	{ ClkTagBar,            MODKEY,              Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,              Button3,        toggletag,      {0} },
 };
-
 
