@@ -14,12 +14,14 @@
 #include "bar_systray.h"
 
 /* Other patches */
+#include "attachx.h"
 #include "focusadjacenttag.h"
 #include "focusfollowmouse.h"
 #include "focusmaster.h"
 #include "movestack.h"
 #include "pertag.h"
 #include "placemouse.h"
+#include "seamless_restart.h"
 #include "sticky.h"
 #include "swallow.h"
 #include "vanitygaps.h"

@@ -106,6 +106,12 @@ enum {
 }; /* default atoms */
 
 enum {
+	ClientFields,
+	ClientTags,
+	ClientLast
+}; /* dwm client atoms */
+
+enum {
 	ClkTagBar,
 	ClkLtSymbol,
 	ClkStatusText,
@@ -185,6 +191,7 @@ struct Client {
 	char name[256];
 	float mina, maxa;
 	int x, y, w, h;
+	unsigned int idx;
 	int oldx, oldy, oldw, oldh;
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh, hintsvalid;
 	int bw, oldbw;
@@ -399,6 +406,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 };
 static Atom wmatom[WMLast], netatom[NetLast];
 static Atom xatom[XLast];
+static Atom clientatom[ClientLast];
 static int running = 1;
 static Cur *cursor[CurLast];
 static Clr **scheme;
@@ -671,6 +679,9 @@ cleanup(void)
 	Monitor *m;
 	Layout foo = { "", NULL };
 	size_t i;
+
+	for (m = mons; m; m = m->next)
+		persistmonitorstate(m);
 
 	selmon->lt[selmon->sellt] = &foo;
 	for (m = mons; m; m = m->next)
@@ -970,6 +981,8 @@ createmon(void)
 
 	}
 
+	restoremonitorstate(m);
+
 	return m;
 }
 
@@ -993,6 +1006,7 @@ void
 detach(Client *c)
 {
 	Client **tc;
+	c->idx = 0;
 
 	for (tc = &c->mon->clients; *tc && *tc != c; tc = &(*tc)->next);
 	*tc = c->next;
@@ -1466,6 +1480,7 @@ manage(Window w, XWindowAttributes *wa)
 {
 	Client *c, *t = NULL;
 	Client *term = NULL;
+	int settings_restored;
 	Window trans = None;
 	XWindowChanges wc;
 
@@ -1478,6 +1493,7 @@ manage(Window w, XWindowAttributes *wa)
 	c->w = c->oldw = wa->width;
 	c->h = c->oldh = wa->height;
 	c->oldbw = wa->border_width;
+	settings_restored = restoreclientstate(c);
 	updateicon(c);
 	updatetitle(c);
 
@@ -1486,9 +1502,13 @@ manage(Window w, XWindowAttributes *wa)
 		c->tags = t->tags;
 		c->bw = borderpx;
 	} else {
-		c->mon = selmon;
+		if (!settings_restored || c->mon == NULL) {
+			c->mon = selmon;
+			settings_restored = 0;
+		}
 		c->bw = borderpx;
-		applyrules(c);
+		if (!settings_restored)
+			applyrules(c);
 		term = termforwin(c);
 		if (term)
 			c->mon = term->mon;
@@ -1526,7 +1546,7 @@ manage(Window w, XWindowAttributes *wa)
 		XRaiseWindow(dpy, c->win);
 		XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColFloat].pixel);
 	}
-	attach(c);
+	attachx(c);
 	attachstack(c);
 	XChangeProperty(dpy, root, netatom[NetClientList], XA_WINDOW, 32, PropModeAppend,
 		(unsigned char *) &(c->win), 1);
@@ -2115,6 +2135,8 @@ setup(void)
 	wmatom[WMDelete] = XInternAtom(dpy, "WM_DELETE_WINDOW", False);
 	wmatom[WMState] = XInternAtom(dpy, "WM_STATE", False);
 	wmatom[WMTakeFocus] = XInternAtom(dpy, "WM_TAKE_FOCUS", False);
+	clientatom[ClientFields] = XInternAtom(dpy, "_DWM_CLIENT_FIELDS", False);
+	clientatom[ClientTags] = XInternAtom(dpy, "_DWM_CLIENT_TAGS", False);
 	netatom[NetActiveWindow] = XInternAtom(dpy, "_NET_ACTIVE_WINDOW", False);
 	netatom[NetSupported] = XInternAtom(dpy, "_NET_SUPPORTED", False);
 	netatom[NetSystemTray] = XInternAtom(dpy, "_NET_SYSTEM_TRAY_S0", False);

@@ -14,6 +14,7 @@
 #include "bar_systray.c"
 
 /* Other patches */
+#include "attachx.c"
 #include "focusadjacenttag.c"
 #include "focusfollowmouse.c"
 #include "focusmaster.c"
@@ -25,6 +26,7 @@
 #include "vanitygaps.c"
 #include "warp.c"
 #include "xrdb.c"
+#include "seamless_restart.c"
 /* Layouts */
 #include "layout_facts.c"
 #include "layout_monocle.c"
