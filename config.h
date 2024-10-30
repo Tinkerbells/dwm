@@ -15,7 +15,7 @@ static const unsigned int gappov         = 30;  /* vert outer gap between window
 static const int smartgaps_fact          = 0;   /* gap factor when there is only one client; 0 = no gaps, 3 = 3x outer gaps */
 static const int showbar                 = 1;   /* 0 means no bar */
 static const int topbar                  = 1;   /* 0 means bottom bar */
-static const int bar_height              = 40;   /* 0 means derive from font, >= 1 explicit height */
+static const int bar_height              = 0;   /* 0 means derive from font, >= 1 explicit height */
 #define ICONSIZE 25    /* icon size */
 #define ICONSPACING 5  /* space between icon and title */
 /* Status is to be shown on: -1 (all monitors), 0 (a specific monitor by index), 'A' (active monitor) */
@@ -27,38 +27,38 @@ static const int showsystray             = 1;   /* 0 means no systray */
 static int tagindicatortype              = INDICATOR_TOP_LEFT_SQUARE;
 static int tiledindicatortype            = INDICATOR_NONE;
 static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
-static const char *fonts[]               = { "ComicShannsMono Nerd Font:size=10:style=Bold" };
+static const char *fonts[]               = { "JetBrainsMono Nerd Font:size=10:style=Bold" };
 static const char dmenufont[]            = "monospace:size=10";
 
 static char c000000[]                    = "#000000"; // placeholder value
 
-static char normfgcolor[]                = "#bbbbbb";
+static char normfgcolor[]                = "#ffffff";
 static char normbgcolor[]                = "#222222";
 static char normbordercolor[]            = "#444444";
 static char normfloatcolor[]             = "#db8fd9";
 
 static char selfgcolor[]                 = "#eeeeee";
-static char selbgcolor[]                 = "#005577";
+static char selbgcolor[]                 = "#222222";
 static char selbordercolor[]             = "#005577";
 static char selfloatcolor[]              = "#005577";
 
-static char titlenormfgcolor[]           = "#bbbbbb";
+static char titlenormfgcolor[]           = "#ffffff";
 static char titlenormbgcolor[]           = "#222222";
 static char titlenormbordercolor[]       = "#444444";
 static char titlenormfloatcolor[]        = "#db8fd9";
 
-static char titleselfgcolor[]            = "#eeeeee";
-static char titleselbgcolor[]            = "#005577";
+static char titleselfgcolor[]            = "#ffffff";
+static char titleselbgcolor[]            = "#222222";
 static char titleselbordercolor[]        = "#005577";
 static char titleselfloatcolor[]         = "#005577";
 
-static char tagsnormfgcolor[]            = "#bbbbbb";
+static char tagsnormfgcolor[]            = "#888888";
 static char tagsnormbgcolor[]            = "#222222";
 static char tagsnormbordercolor[]        = "#444444";
 static char tagsnormfloatcolor[]         = "#db8fd9";
 
-static char tagsselfgcolor[]             = "#eeeeee";
-static char tagsselbgcolor[]             = "#005577";
+static char tagsselfgcolor[]             = "#ffffff";
+static char tagsselbgcolor[]             = "#222222";
 static char tagsselbordercolor[]         = "#005577";
 static char tagsselfloatcolor[]          = "#005577";
 
@@ -67,7 +67,7 @@ static char hidselfgcolor[]              = "#227799";
 static char hidnormbgcolor[]             = "#222222";
 static char hidselbgcolor[]              = "#222222";
 
-static char urgfgcolor[]                 = "#bbbbbb";
+static char urgfgcolor[]                 = "#ffffff";
 static char urgbgcolor[]                 = "#222222";
 static char urgbordercolor[]             = "#ff0000";
 static char urgfloatcolor[]              = "#db8fd9";
@@ -129,7 +129,7 @@ static char *colors[][ColCount] = {
  */
 static char *tagicons[][NUMTAGS] =
 {
-	[DEFAULT_TAGS]        = { "1", "2", "3", "4", "5", "6", "7", "8", "9" },
+	[DEFAULT_TAGS]        = { "1", "2", "3" },
 	[ALTERNATIVE_TAGS]    = { NULL },
 	[ALT_TAGS_DECORATION] = { NULL },
 };
